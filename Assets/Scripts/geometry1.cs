@@ -2,58 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
 public class geometry1 : MonoBehaviour
 {
     public GameObject geo;
    
     void Start()
     {
-        Draw(geo, 1);
-        
-        //CombineMeshes();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            CombineMeshes();
-        }
-    }
-
-    void Draw(GameObject obj,float d)
-    {
-        float d2 = d;
-        Instantiate(obj, transform);
-        Instantiate(obj, new Vector3(transform.position.x + d2, transform.position.y, transform.position.z), Quaternion.identity, transform);
-        Instantiate(obj, new Vector3(transform.position.x + d2, transform.position.y, transform.position.z + d2), Quaternion.identity, transform);
-        Instantiate(obj, new Vector3(transform.position.x, transform.position.y, transform.position.z + d2), Quaternion.identity, transform);
-        Instantiate(obj, new Vector3(transform.position.x + d2/2, transform.position.y + d, transform.position.z + d2/2), Quaternion.identity, transform);
-    }
-
-    void CombineMeshes()
-    {
-        MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
-        CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-
         int i = 0;
-        while (i < meshFilters.Length)
+        while(i<=6)
         {
-            combine[i].mesh = meshFilters[i].sharedMesh;
-            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            meshFilters[i].gameObject.SetActive(false);
-
+            geo = Draw(geo, Mathf.Pow(2,i));
             i++;
         }
-        var meshFilter = transform.GetComponent<MeshFilter>();
-        meshFilter.mesh = new Mesh();
-        meshFilter.mesh.CombineMeshes(combine);
-        transform.gameObject.SetActive(true);
 
-        transform.localScale = new Vector3(1, 1, 1);
-        transform.rotation = Quaternion.identity;
-        transform.position = Vector3.zero;
+        GetComponent<MeshCombine>().CombineMeshes();
     }
+
+    GameObject Draw(GameObject obj,float d)
+    {
+        GameObject parent = new GameObject();
+        parent.name = "rodzic rzedu " + d ;
+        parent.AddComponent<MeshCombine>();
+        parent.transform.SetParent(transform);
+        Instantiate(obj, parent.transform);
+        Instantiate(obj, new Vector3(parent.transform.position.x + d, parent.transform.position.y, parent.transform.position.z), Quaternion.identity, parent.transform);
+        Instantiate(obj, new Vector3(parent.transform.position.x + d, parent.transform.position.y, parent.transform.position.z + d), Quaternion.identity, parent.transform);
+        Instantiate(obj, new Vector3(parent.transform.position.x, parent.transform.position.y, parent.transform.position.z + d), Quaternion.identity, parent.transform);
+        Instantiate(obj, new Vector3(parent.transform.position.x + d/2, parent.transform.position.y + d, parent.transform.position.z + d/2), Quaternion.identity, parent.transform);
+        parent.GetComponent<MeshCombine>().CombineMeshes();
+        //CombineMeshes(parent);
+
+        return parent;
+    }
+
+    
 }
 
