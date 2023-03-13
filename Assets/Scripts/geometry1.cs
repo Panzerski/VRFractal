@@ -17,6 +17,11 @@ public class geometry1 : MonoBehaviour
         }
 
         GetComponent<MeshCombine>().CombineMeshes();
+
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     GameObject Draw(GameObject obj,float d)

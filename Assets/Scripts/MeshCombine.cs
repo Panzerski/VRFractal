@@ -22,8 +22,8 @@ public class MeshCombine : MonoBehaviour
         {
             combine[i].mesh = meshFilters[i].sharedMesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            Destroy(meshFilters[i].gameObject);
-            //meshFilters[i].gameObject.SetActive(false);
+            
+            meshFilters[i].gameObject.SetActive(false);
 
             i++;
         }
