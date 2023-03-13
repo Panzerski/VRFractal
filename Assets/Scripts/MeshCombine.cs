@@ -22,12 +22,14 @@ public class MeshCombine : MonoBehaviour
         {
             combine[i].mesh = meshFilters[i].sharedMesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            meshFilters[i].gameObject.SetActive(false);
+            Destroy(meshFilters[i].gameObject);
+            //meshFilters[i].gameObject.SetActive(false);
 
             i++;
         }
         var meshFilter = transform.GetComponent<MeshFilter>();
         meshFilter.mesh = new Mesh();
+        meshFilter.mesh.indexFormat=UnityEngine.Rendering.IndexFormat.UInt32;
         meshFilter.mesh.CombineMeshes(combine);
         transform.gameObject.SetActive(true);
 

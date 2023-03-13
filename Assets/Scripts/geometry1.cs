@@ -5,11 +5,12 @@ using UnityEngine;
 public class geometry1 : MonoBehaviour
 {
     public GameObject geo;
-   
+    public int p;
+
     void Start()
     {
         int i = 0;
-        while(i<=6)
+        while(i<=p)
         {
             geo = Draw(geo, Mathf.Pow(2,i));
             i++;
