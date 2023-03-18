@@ -6,12 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class MeshCombine : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     public void CombineMeshes()
     {
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();

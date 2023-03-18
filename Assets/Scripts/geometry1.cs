@@ -2,24 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class geometry1 : MonoBehaviour
+public class geometry1 : Main
 {
-    public GameObject geo;
-    public int p;
-
-    void Start()
-    {
-        
-        int i = 0;
-        while(i<=p)
-        {
-            geo = Draw(geo, Mathf.Pow(2,i));
-            i++;
-        }
-        GetComponent<MeshCombine>().CombineMeshes();
-    }
-
-    GameObject Draw(GameObject obj,float d)
+    public override GameObject Draw(GameObject obj,float d)
     {
         GameObject parent = new GameObject();
         parent.name = "rodzic rzedu " + d ;
@@ -38,13 +23,7 @@ public class geometry1 : MonoBehaviour
         return parent;
     }
 
-    void DestroyChildren(Transform transform)
-    {
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
+    
 
     
 }
