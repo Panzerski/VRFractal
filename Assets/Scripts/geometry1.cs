@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class geometry1 : Main
 {
-    //public static bool first = true;
     public override GameObject Draw(GameObject obj,float d)
     {
         

@@ -14,7 +14,6 @@ public class Main : MonoBehaviour
         first=true;
         int i = 0;
 
-        //Instantiate(geo, transform);
         while (i <= p)
         {
             if(first)
