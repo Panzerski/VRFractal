@@ -5,14 +5,30 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     public GameObject geo;
+    GameObject temp;
     public int p;
-    
+    public static bool first;
+
     void Start()
     {
+        first=true;
         int i = 0;
+
+        //Instantiate(geo, transform);
         while (i <= p)
         {
-            geo = Draw(geo, Mathf.Pow(2, i));
+            if(first)
+            {
+                geo = Draw(geo, Mathf.Pow(2, i));
+                first=false;
+            }
+            else
+            {
+                temp = geo;
+                Destroy(geo);
+                geo = Draw(temp, Mathf.Pow(2, i));
+            }
+            
             i++;
         }
         GetComponent<MeshCombine>().CombineMeshes();
