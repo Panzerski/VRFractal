@@ -6,6 +6,7 @@ public class geometry2 : Main
 {
     public override GameObject Draw(GameObject obj, float d)
     {
+        //n = 3;
         GameObject parent = new GameObject();
         parent.name = "rodzic rzedu " + d;
         parent.AddComponent<MeshCombine>();

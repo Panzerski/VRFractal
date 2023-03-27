@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     GameObject temp;
     public int p;
     public static bool first;
+    public int n;
 
     void Start()
     {
@@ -18,14 +19,14 @@ public class Main : MonoBehaviour
         {
             if(first)
             {
-                geo = Draw(geo, Mathf.Pow(2, i));
+                geo = Draw(geo, Mathf.Pow(n, i));
                 first=false;
             }
             else
             {
                 temp = geo;
                 Destroy(geo);
-                geo = Draw(temp, Mathf.Pow(2, i));
+                geo = Draw(temp, Mathf.Pow(n, i));
             }
             
             i++;

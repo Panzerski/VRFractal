@@ -8,7 +8,6 @@ public class geometry1 : Main
     {
         
         GameObject parent = new GameObject();
-
         parent.name = "rodzic rzedu " + d ;
         parent.AddComponent<MeshCombine>();
         parent.transform.SetParent(transform);
