@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
-public class Raymarch : SceneViewFilter
+public class Raymarch : MonoBehaviour
 {
     [SerializeField]
     private Shader _shader;
@@ -52,14 +52,14 @@ public class Raymarch : SceneViewFilter
 
         _raymarchMaterial.SetVector("_LightDir",_directionalLight ? _directionalLight.forward : Vector3.down);
         _raymarchMaterial.SetMatrix("_CamFrustum",CamFrustum(_camera));
-        _raymarchMaterial.SetMatrix("_CamToWorld",_camera.cameraToWorldMatrix);
+        _raymarchMaterial.SetMatrix("_CamToWorldMatrix",_camera.cameraToWorldMatrix);
         _raymarchMaterial.SetFloat("_maxDistance", maxDistance);
         _raymarchMaterial.SetVector("_sphere1", sphere1);
         _raymarchMaterial.SetVector("_box1", box1);
         //material.SetVector("_CamWorldSpace",_camera.transform.position);
 
         RenderTexture.active = destination;
-        _raymarchMaterial.SetTexture("_MainTex",source);
+       // _raymarchMaterial.SetTexture("_MainTex",source);
 
         GL.PushMatrix();
         GL.LoadOrtho();
@@ -77,7 +77,7 @@ public class Raymarch : SceneViewFilter
         GL.Vertex3(1.0f, 1.0f, 1.0f);
         //TL
         GL.MultiTexCoord2(0, 0.0f, 1.0f);
-        GL.Vertex3(0.0f, 1.0f, 2.0f);
+        GL.Vertex3(0.0f, 1.0f, 0.0f);
 
         GL.End();
         GL.PopMatrix();

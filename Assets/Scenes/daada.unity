@@ -251,7 +251,7 @@ MonoBehaviour:
   _shader: {fileID: 4800000, guid: acb45f927c7742241af5afd2291c6d92, type: 3}
   _directionalLight: {fileID: 76186350}
   maxDistance: 1000
-  sphere1: {x: 11.26, y: -0.87, z: -3.06, w: 1.1}
+  sphere1: {x: 11.26, y: 0, z: 0, w: 1.98}
   box1: {x: 0.62, y: -0.15, z: 1.06, w: 0.25}
 --- !u!81 &1787174481
 AudioListener:

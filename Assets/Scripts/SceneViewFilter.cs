@@ -3,7 +3,7 @@
 using UnityEditor;
 #endif
 
-public class SceneViewFilter : MonoBehaviour
+public class MonoBehaviour : UnityEngine.MonoBehaviour
 {
 #if UNITY_EDITOR
     bool hasChanged = false;
@@ -13,7 +13,7 @@ public class SceneViewFilter : MonoBehaviour
         hasChanged = true;
     }
 
-    static SceneViewFilter()
+    static MonoBehaviour()
     {
         SceneView.duringSceneGui += CheckMe;
     }
@@ -25,8 +25,8 @@ public class SceneViewFilter : MonoBehaviour
         if (!Camera.main)
             return;
         // Get a list of everything on the main camera that should be synced.
-        SceneViewFilter[] cameraFilters = Camera.main.GetComponents<SceneViewFilter>();
-        SceneViewFilter[] sceneFilters = sv.camera.GetComponents<SceneViewFilter>();
+        MonoBehaviour[] cameraFilters = Camera.main.GetComponents<MonoBehaviour>();
+        MonoBehaviour[] sceneFilters = sv.camera.GetComponents<MonoBehaviour>();
 
         // Let's see if the lists are different lengths or something like that. 
         // If so, we simply destroy all scene filters and recreate from maincame
@@ -56,13 +56,13 @@ public class SceneViewFilter : MonoBehaviour
 
     static void Recreate(SceneView sv)
     {
-        SceneViewFilter filter;
-        while (filter = sv.camera.GetComponent<SceneViewFilter>())
+        MonoBehaviour filter;
+        while (filter = sv.camera.GetComponent<MonoBehaviour>())
             DestroyImmediate(filter);
 
-        foreach (SceneViewFilter f in Camera.main.GetComponents<SceneViewFilter>())
+        foreach (MonoBehaviour f in Camera.main.GetComponents<MonoBehaviour>())
         {
-            SceneViewFilter newFilter = sv.camera.gameObject.AddComponent(f.GetType()) as SceneViewFilter;
+            MonoBehaviour newFilter = sv.camera.gameObject.AddComponent(f.GetType()) as MonoBehaviour;
             EditorUtility.CopySerialized(f, newFilter);
         }
     }

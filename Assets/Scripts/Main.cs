@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Main : MonoBehaviour
+public class Main : UnityEngine.MonoBehaviour
 {
     public GameObject geo;
     GameObject temp;

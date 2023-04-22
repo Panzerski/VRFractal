@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class MeshCombine : MonoBehaviour
+public class MeshCombine : UnityEngine.MonoBehaviour
 {
     public void CombineMeshes()
     {

@@ -59,9 +59,9 @@
     <Compile Include="Assets\Scripts\geometry1.cs" />
     <Compile Include="Assets\Scripts\MeshCombine.cs" />
     <Compile Include="Assets\Scripts\Raymarch.cs" />
+    <Compile Include="Assets\Scripts\SceneViewFilter.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\geometry2.cs" />
-    <Compile Include="Assets\Scripts\SceneViewFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\DistanceFunctions.cginc" />
