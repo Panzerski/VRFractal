@@ -4,55 +4,66 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
-public class Raymarch : MonoBehaviour
+public class Raymarch : SceneViewFilter
 {
     [SerializeField]
-    private Shader shader;
+    private Shader _shader;
 
-    public Material material
+    public Material _raymarchMaterial
     {
         get
         {
-            if(!raymarchMaterial && shader)
+            if(!_raymarchMat && _shader)
             {
-                raymarchMaterial = new Material(shader);
-                raymarchMaterial.hideFlags = HideFlags.HideAndDontSave;
+                _raymarchMat = new Material(_shader);
+                _raymarchMat.hideFlags = HideFlags.HideAndDontSave;
             }
-            return raymarchMaterial;
+            return _raymarchMat;
         }
     }
 
-    private Material raymarchMaterial;
+    private Material _raymarchMat;
 
     public Camera _camera
     {
         get
         {
-            if(!cam)
+            if(!_cam)
             {
-                cam = GetComponent<Camera>();
+                _cam = GetComponent<Camera>();
             }
-            return cam;
+            return _cam;
         }
     }
-    private Camera cam;
+    private Camera _cam;
+
+    public Transform _directionalLight;
+
+    public float maxDistance;
+    public Vector4 sphere1, box1;
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if(!material)
+        if(!_raymarchMaterial)
         {
             Graphics.Blit(source, destination);
             return;
         }
 
-        material.SetMatrix("_CamFrustum",CamFrustum(_camera));
-        material.SetMatrix("_CamToWorld",_camera.cameraToWorldMatrix);
-        material.SetVector("_CamWorldSpace",_camera.transform.position);
+        _raymarchMaterial.SetVector("_LightDir",_directionalLight ? _directionalLight.forward : Vector3.down);
+        _raymarchMaterial.SetMatrix("_CamFrustum",CamFrustum(_camera));
+        _raymarchMaterial.SetMatrix("_CamToWorld",_camera.cameraToWorldMatrix);
+        _raymarchMaterial.SetFloat("_maxDistance", maxDistance);
+        _raymarchMaterial.SetVector("_sphere1", sphere1);
+        _raymarchMaterial.SetVector("_box1", box1);
+        //material.SetVector("_CamWorldSpace",_camera.transform.position);
 
         RenderTexture.active = destination;
+        _raymarchMaterial.SetTexture("_MainTex",source);
+
         GL.PushMatrix();
         GL.LoadOrtho();
-        material.SetPass(0);
+        _raymarchMaterial.SetPass(0);
         GL.Begin(GL.QUADS);
 
         //BL
@@ -82,8 +93,8 @@ public class Raymarch : MonoBehaviour
 
         Vector3 TL = (-Vector3.forward - goRight + goUp);
         Vector3 TR = (-Vector3.forward + goRight + goUp);
-        Vector3 BL = (-Vector3.forward - goRight - goUp);
         Vector3 BR = (-Vector3.forward + goRight - goUp);
+        Vector3 BL = (-Vector3.forward - goRight - goUp);
 
         frustum.SetRow(0, TL);
         frustum.SetRow(1, TR);

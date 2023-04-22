@@ -370,6 +370,7 @@
 "Assets/Scripts/Main.cs"
 "Assets/Scripts/MeshCombine.cs"
 "Assets/Scripts/Raymarch.cs"
+"Assets/Scripts/SceneViewFilter.cs"
 -langversion:9.0
 
 /deterministic

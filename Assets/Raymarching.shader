@@ -1,4 +1,4 @@
-Shader "PeerPlay/Raymarching"
+Shader "Raymarching"
 {
     Properties
     {
@@ -18,10 +18,15 @@ Shader "PeerPlay/Raymarching"
             #pragma target 3.0
 
             #include "UnityCG.cginc"
+            #include "DistanceFunctions.cginc"
 
             sampler2D _MainTex;
-            uniform float4 _CamWorldSpace;
+            
+            uniform sampler2D _CameraDepthTexture;
             uniform float4x4 _CamFrustum, _CamToWorld;
+            uniform float _maxDistance;
+            uniform float4 _sphere1, _box1;
+            uniform float3 _LightDir;
 
             struct appdata
             {
@@ -52,13 +57,70 @@ Shader "PeerPlay/Raymarching"
                 return o;
             }
 
+            float distanceField(float3 p)
+            {
+                float Sphere1 = sdSphere(p - _sphere1.xyz, _sphere1.w);
+                float Box1 = sdBox(p - _box1.xyz, _box1.www);
 
+                return Sphere1;
+            }
+
+            float3 getNormal(float3 p)
+            {
+                const float2 offset = float2(0.001, 0.0);
+                float3 n = float3(
+                    distanceField(p + offset.xyy) - distanceField(p - offset.xyy),
+                    distanceField(p + offset.yxy) - distanceField(p - offset.yxy),
+                    distanceField(p + offset.yyx) - distanceField(p - offset.yyx)
+                    );
+                return normalize(n);
+            }
+
+            fixed4 raymarching(float3 ro, float3 rd,float depth)
+            {
+                fixed4 result = fixed4(1, 1, 1, 1);
+
+                //mo¿liwe ¿e wiêcej
+                const int max_iteration = 128;
+
+                float t = 0;
+                for (int i = 0; i < max_iteration; i++)
+                {
+                    if (t > _maxDistance || t>=depth)
+                    {
+                        result = fixed4(rd, 0);
+                        break;
+                    }
+
+                    float3 p = ro + rd * t;
+
+                    float d = distanceField(p);
+                    if (d < 0.01)
+                    {
+                        float3 n = getNormal(p);
+                        float light = dot(-_LightDir, n);
+
+                        result = fixed4(fixed3(1,1,1)*light,1);
+                        break;
+                    }
+
+                    t += d;
+
+                }
+
+
+                return result;
+            }
 
             fixed4 frag(v2f i) : SV_Target
             {
+                float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
+                depth *= length(i.ray);
+                fixed3 col = tex2D(_MainTex, i.uv);
                 float3 rayDirection = normalize(i.ray.xyz);
-                float3 rayOrigin = _CamWorldSpace;
-                return fixed4(rayDirection, 1);
+                float3 rayOrigin = _WorldSpaceCameraPos;
+                fixed4 result = raymarching(rayOrigin, rayDirection,depth);
+                return fixed4(col*(1.0-result.w)+result.xyz*result.w ,1.0);
             }
             ENDCG
         }

@@ -61,8 +61,10 @@
     <Compile Include="Assets\Scripts\Raymarch.cs" />
     <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\geometry2.cs" />
+    <Compile Include="Assets\Scripts\SceneViewFilter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\DistanceFunctions.cginc" />
     <None Include="Assets\Raymarching.shader" />
   </ItemGroup>
   <ItemGroup>
