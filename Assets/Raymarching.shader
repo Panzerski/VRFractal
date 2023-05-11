@@ -27,8 +27,15 @@ Shader "Raymarching"
             //uniform sampler2D _CameraDepthTexture;
             uniform float4x4 _CamFrustum, _CamToWorldMatrix;
             uniform float _maxDistance;
+            uniform int _MaxIterations;
+            uniform float _Accuracy;
             uniform float4 _sphere1, _box1;
-            uniform float3 _LightDir;
+            uniform float3 _LightDir,_LightCol;
+            uniform float _LightIntensity;
+            uniform fixed3 _mainColor;
+            uniform float2 _ShadowDistance;
+            uniform float _ShadowIntensity;
+            uniform float _ShadowPenumbra;
 
             struct appdata
             {
@@ -69,7 +76,7 @@ Shader "Raymarching"
                 float Sphere1 = sdSphere(p - _sphere1.xyz, _sphere1.w);
                 float Box1 = sdBox(p - _box1.xyz, _box1.www);
 
-                return Sphere1;
+                return opU(Sphere1,Box1);
             }
 
             float3 getNormal(float3 p)
@@ -83,36 +90,97 @@ Shader "Raymarching"
                 return normalize(n);
             }
 
+            float hardShadow(float3 ro, float3 rd, float mint, float maxt)
+            {
+                for (float t = mint; t < maxt;)
+                {
+                    float h = distanceField(ro+rd*t);
+                    if (h < 0.001)
+                    {
+                        return 0.0;
+                    }
+                    t += h;
+                }
+                return 1.0;
+            }
+
+            float softShadow(float3 ro, float3 rd, float mint, float maxt, float k)
+            {
+                float result = 1.0;
+                for (float t = mint; t < maxt;)
+                {
+                    float h = distanceField(ro + rd * t);
+                    if (h < 0.001)
+                    {
+                        return 0.0;
+                    }
+                    result = min(result, k * h / t);
+                    t += h;
+                }
+                return result;
+            }
+
+            uniform float _AoStepsize, _AoIntensity;
+            uniform int _AoIterations;
+
+            float AmbientOcclusion(float3 p, float3 n)
+            {
+                float step = _AoStepsize;
+                float ao = 0.0;
+                float dist;
+                for (int i = 1; i <= _AoIterations; i++)
+                {
+                    dist = step * i;
+                    ao +=max(0.0,(dist - distanceField(p + n * dist)) / dist);
+                }
+                return (1.0 - ao * _AoIntensity);
+            }
+
+            float3 Shading(float3 p, float3 n)
+            {
+                float3 result;
+                float3 color = _mainColor.rgb;
+                float3 light = (_LightCol*dot(-_LightDir, n)*0.5+0.5)*_LightIntensity;
+
+                float shadow = softShadow(p, -_LightDir, _ShadowDistance.x, _ShadowDistance.y,_ShadowPenumbra) * 0.5 + 0.5;
+                shadow = max(0.0,pow(shadow, _ShadowIntensity));
+                float ao = AmbientOcclusion(p, n);
+
+                result = color * light * shadow * ao;
+
+                return result;
+            }
+
             fixed4 raymarching(float3 ro, float3 rd
                 //,float depth
             )
             {
                 fixed4 result = fixed4(1, 1, 1, 1);
 
-                //mo¿liwe ¿e wiêcej
-                const int max_iteration = 128;
+                const int max_iteration = _MaxIterations;
 
                 float t = 0;
                 for (int i = 0; i < max_iteration; i++)
                 {
-                    if (t > _maxDistance 
+                    if (t > _maxDistance
                         //|| t>=depth
                         )
                     {
-                        result = fixed4(rd, 1);
+                        //result = fixed4(rd, 1);
+                        result = fixed4(0.2,0.2,0.2,1);
+
                         break;
                     }
 
                     float3 p = ro + rd * t;
 
                     float d = distanceField(p);
-                    if (d < 0.01)
+                    if (d < _Accuracy)
                     {
                         float3 n = getNormal(p);
-                        float light = dot(-_LightDir, n);
+                        float3 s = Shading(p, n);
 
-                        //result = fixed4(fixed3(1,1,1)*light,1);
-                        result = fixed4(1,1,1,1)* light;
+                        result = fixed4(_mainColor.rgb*s, 1);
                         break;
                     }
 

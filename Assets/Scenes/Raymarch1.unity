@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44641733, g: 0.496233, b: 0.57472044, a: 1}
+  m_IndirectSpecularColor: {r: 0.4511267, g: 0.49971694, b: 0.56751823, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -151,7 +151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644266240}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -311,10 +311,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: acb45f927c7742241af5afd2291c6d92, type: 3}
-  _directionalLight: {fileID: 705507995}
   maxDistance: 1000
-  sphere1: {x: 0, y: 1.15, z: 12.19, w: 0.4}
-  box1: {x: 0, y: 0, z: 0, w: 0}
+  maxIterations: 2831
+  Accuracy: 0.0001
+  directionalLight: {fileID: 705507995}
+  LightCol: {r: 1, g: 1, b: 1, a: 1}
+  LightIntensity: 1.36
+  ShadowIntensity: 1.111
+  ShadowDistance: {x: 0.53, y: 20}
+  ShadowPenumbra: 10
+  AoStepsize: 0.15
+  AoIntensity: 0.059
+  AoIterations: 3
+  mainColor: {r: 0.7798118, g: 0.85238355, b: 0.85882354, a: 1}
+  sphere1: {x: 0, y: 1, z: 0.39, w: 0.2}
+  box1: {x: 0, y: -20, z: 0, w: 20}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,14 +412,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.30757517, y: -0.36768183, z: 0.3914516, w: 0.78547645}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: -0.024228862, y: -0.38751033, z: 0.5872673, w: 0.7101872}
+  m_LocalPosition: {x: 0.1, y: 2.55, z: -0.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 129.552, y: -211.933, z: -142.37201}
+  m_LocalEulerAnglesHint: {x: 155.119, y: -219.65, z: -109.918}
 --- !u!1 &896635066
 GameObject:
   m_ObjectHideFlags: 0

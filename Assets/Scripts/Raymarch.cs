@@ -37,9 +37,36 @@ public class Raymarch : MonoBehaviour
     }
     private Camera _cam;
 
-    public Transform _directionalLight;
-
+    [Header("MainParameters")]
     public float maxDistance;
+    [Range(1, 300)]
+    public int maxIterations;
+    [Range(1f, 0.0001f)]
+    public float Accuracy;
+
+    [Header("Directional Light")]
+    public Transform directionalLight;
+    public Color LightCol;
+    [Range(0, 10)]
+    public float LightIntensity;
+
+    [Header("Shadow")]
+    [Range(0, 4)]
+    public float ShadowIntensity;
+    public Vector2 ShadowDistance;
+    [Range(1,128)]
+    public float ShadowPenumbra;
+
+    [Header("Occlusion")]
+    [Range(0.01f,10.0f)]
+    public float AoStepsize;
+    [Range(0.0f, 1.0f)]
+    public float AoIntensity;
+    [Range(1, 5)]
+    public int AoIterations;
+
+    [Header("Signed Distance Field")]
+    public Color mainColor;
     public Vector4 sphere1, box1;
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -50,13 +77,28 @@ public class Raymarch : MonoBehaviour
             return;
         }
 
-        _raymarchMaterial.SetVector("_LightDir",_directionalLight ? _directionalLight.forward : Vector3.down);
-        _raymarchMaterial.SetMatrix("_CamFrustum",CamFrustum(_camera));
-        _raymarchMaterial.SetMatrix("_CamToWorldMatrix",_camera.cameraToWorldMatrix);
+        _raymarchMaterial.SetVector("_LightDir", directionalLight ? directionalLight.forward : Vector3.down);
+        _raymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(_camera));
+        _raymarchMaterial.SetMatrix("_CamToWorldMatrix", _camera.cameraToWorldMatrix);
+
+        _raymarchMaterial.SetInt("_AoIterations", AoIterations);
+        _raymarchMaterial.SetFloat("_AoStepsize", AoStepsize);
+        _raymarchMaterial.SetFloat("_AoIntensity", AoIntensity);
+
+        _raymarchMaterial.SetInt("_MaxIterations", maxIterations);
+        _raymarchMaterial.SetFloat("_Accuracy", Accuracy);
         _raymarchMaterial.SetFloat("_maxDistance", maxDistance);
+
+        _raymarchMaterial.SetColor("_LightCol", LightCol);
+        _raymarchMaterial.SetFloat("_LightIntensity", LightIntensity);
+
+        _raymarchMaterial.SetFloat("_ShadowIntensity", ShadowIntensity);
+        _raymarchMaterial.SetVector("_ShadowDistance", ShadowDistance);
+        _raymarchMaterial.SetFloat("_ShadowPenumbra", ShadowPenumbra);
+        
         _raymarchMaterial.SetVector("_sphere1", sphere1);
         _raymarchMaterial.SetVector("_box1", box1);
-        //material.SetVector("_CamWorldSpace",_camera.transform.position);
+        _raymarchMaterial.SetColor("_mainColor", mainColor);
 
         RenderTexture.active = destination;
        // _raymarchMaterial.SetTexture("_MainTex",source);
