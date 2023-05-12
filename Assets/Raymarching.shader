@@ -30,12 +30,16 @@ Shader "Raymarching"
             uniform int _MaxIterations;
             uniform float _Accuracy;
             uniform float4 _sphere1, _box1;
+            uniform float _handSize;
             uniform float3 _LightDir,_LightCol;
             uniform float _LightIntensity;
             uniform fixed3 _mainColor;
             uniform float2 _ShadowDistance;
             uniform float _ShadowIntensity;
             uniform float _ShadowPenumbra;
+
+            uniform float3 _LConPos,_RConPos;
+
 
             struct appdata
             {
@@ -75,8 +79,10 @@ Shader "Raymarching"
             {
                 float Sphere1 = sdSphere(p - _sphere1.xyz, _sphere1.w);
                 float Box1 = sdBox(p - _box1.xyz, _box1.www);
+                float Hand1 = sdSphere(p - _LConPos, _handSize);
+                float Hand2 = sdSphere(p - _RConPos, _handSize);
 
-                return opU(Sphere1,Box1);
+                return opU(opU(Sphere1,Box1),opU(Hand1,Hand2));
             }
 
             float3 getNormal(float3 p)

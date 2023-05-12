@@ -36,6 +36,9 @@ public class Raymarch : MonoBehaviour
         }
     }
     private Camera _cam;
+    [Header("Controllers")]
+    public Transform conL;
+    public Transform conR;
 
     [Header("MainParameters")]
     public float maxDistance;
@@ -67,7 +70,9 @@ public class Raymarch : MonoBehaviour
 
     [Header("Signed Distance Field")]
     public Color mainColor;
+    public float handScale;
     public Vector4 sphere1, box1;
+    
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -76,6 +81,9 @@ public class Raymarch : MonoBehaviour
             Graphics.Blit(source, destination);
             return;
         }
+
+        _raymarchMaterial.SetVector("_LConPos",conL.position);
+        _raymarchMaterial.SetVector("_RConPos", conR.position);
 
         _raymarchMaterial.SetVector("_LightDir", directionalLight ? directionalLight.forward : Vector3.down);
         _raymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(_camera));
@@ -99,6 +107,8 @@ public class Raymarch : MonoBehaviour
         _raymarchMaterial.SetVector("_sphere1", sphere1);
         _raymarchMaterial.SetVector("_box1", box1);
         _raymarchMaterial.SetColor("_mainColor", mainColor);
+        _raymarchMaterial.SetFloat("_handSize", handScale);
+
 
         RenderTexture.active = destination;
        // _raymarchMaterial.SetTexture("_MainTex",source);
