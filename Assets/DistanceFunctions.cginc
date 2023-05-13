@@ -1,11 +1,11 @@
-﻿// Sphere
-// s: promien
-float sdSphere(float3 p, float s)
+﻿// Sfera
+// r: promien
+float sdSphere(float3 p, float r)
 {
-	return length(p) - s;
+	return length(p) - r;
 }
 
-// Box
+// Szescian
 // b: rozmiar w x/y/z
 float sdBox(float3 p, float3 b)
 {
@@ -20,6 +20,17 @@ float sdTorus(float3 p, float2 t)
 {
 	float2 q = float2(length(p.xz) - t.x, p.y);
 	return length(q) - t.y;
+}
+// Krzyz
+//
+float sdCross(float3 p)
+{
+    float inf = 1e20;
+
+    float da = sdBox(p.xyz, float3(inf, 1.0, 1.0));
+    float db = sdBox(p.yzx, float3(1.0, inf, 1.0));
+    float dc = sdBox(p.zxy, float3(1.0, 1.0, inf));
+    return min(da, min(db, dc));
 }
 
 // BOOLEAN OPERATORS //
@@ -40,6 +51,89 @@ float opS(float d1, float d2)
 float opI(float d1, float d2)
 {
 	return max(d1, d2);
+}
+
+// Nieskonczone sfery
+// r: promień
+// c: odstęp
+float sdInfSphere(float3 p, float r, float3 c)
+{
+    p = fmod(p, c) - c * 0.5;
+    return length(p) - r;
+}
+
+// Kostka Mengera
+float sdMenger(float3 p, float scale, int iterations)
+{
+    return p;
+}
+
+// Czworościan Sierpińskiego
+float sdSierpinski(float3 p, float3 scale, int iterations)
+{
+    float sqrt2 = sqrt(2.0);
+
+    // Initial tetrahedron vertices
+    float3 vertices[4] = {
+        float3(0, 0, sqrt2 / 3),
+        float3(sqrt2 / 2, 0, -sqrt2 / 6),
+        float3(sqrt2 / 4, sqrt2 / 2, -sqrt2 / 6),
+        float3(sqrt2 / 4, sqrt2 / 6, sqrt2 / 2)
+    };
+
+    float dist = 1e20;
+
+    // Perform iterations of subdivision
+    for (int i = 0; i < iterations; i++)
+    {
+        float3 tempVertices[4];
+
+        // Subdivide each face of the tetrahedron
+        for (int j = 0; j < 4; j++)
+        {
+            tempVertices[0] = vertices[j];
+            tempVertices[1] = (vertices[(j + 1) % 4] + vertices[j]) * 0.5;
+            tempVertices[2] = (vertices[(j + 2) % 4] + vertices[j]) * 0.5;
+            tempVertices[3] = (vertices[(j + 3) % 4] + vertices[j]) * 0.5;
+
+            // Replace vertices with subdivided faces
+            for (int k = 0; k < 4; k++)
+            {
+                vertices[j] = tempVertices[k];
+                // Apply scaling
+                vertices[j].x *= scale.x;
+                vertices[j].y *= scale.y;
+                vertices[j].z *= scale.z;
+
+                // Calculate the distance from the point to the current face
+                float currDist = length(p - vertices[j]);
+                if (currDist < dist)
+                    dist = currDist;
+            }
+        }
+    }
+    return dist;
+}
+
+float DE(float3 z,float Scale,int Iterations)
+{
+    float3 a1 = float3(1, 1, 1);
+    float3 a2 = float3(-1, -1, 1);
+    float3 a3 = float3(1, -1, -1);
+    float3 a4 = float3(-1, 1, -1);
+    float3 c;
+    int n = 0;
+    float dist, d;
+    while (n < Iterations) {
+        c = a1; dist = length(z - a1);
+        d = length(z - a2); if (d < dist) { c = a2; dist = d; }
+        d = length(z - a3); if (d < dist) { c = a3; dist = d; }
+        d = length(z - a4); if (d < dist) { c = a4; dist = d; }
+        z = Scale * z - c * (Scale - 1.0);
+        n++;
+    }
+
+    return length(z) * pow(Scale, float(-n));
 }
 
 // Mod Position Axis

@@ -68,11 +68,28 @@ public class Raymarch : MonoBehaviour
     [Range(1, 5)]
     public int AoIterations;
 
-    [Header("Signed Distance Field")]
+    [Header("Distance Fog")]
+    public Color fogColor;
+    public float fogDensity;
+
+    [Header("Signed Distance Field: Main")]
     public Color mainColor;
     public float handScale;
+
+    [Header("Signed Distance Field: Sierpinskis Tetrahedron")]
+    public int sierpIterations;
+    public Vector3 sierpScale1;
+    public Vector3 sierpinski1;
+
+    [Header("Signed Distance Field: Mengers Cube")]
+    public int mengerIterations;
+    public float mengerScale1;
+    public Vector3 menger1;
+
+    [Header("Signed Distance Field: Other(test)")]
     public Vector4 sphere1, box1;
-    
+    public Vector3 c;
+
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -81,6 +98,11 @@ public class Raymarch : MonoBehaviour
             Graphics.Blit(source, destination);
             return;
         }
+
+        _raymarchMaterial.SetVector("c", c);
+
+        _raymarchMaterial.SetColor("_FogColor", fogColor);
+        _raymarchMaterial.SetFloat("_FogDensity", fogDensity);
 
         _raymarchMaterial.SetVector("_LConPos",conL.position);
         _raymarchMaterial.SetVector("_RConPos", conR.position);
@@ -108,6 +130,16 @@ public class Raymarch : MonoBehaviour
         _raymarchMaterial.SetVector("_box1", box1);
         _raymarchMaterial.SetColor("_mainColor", mainColor);
         _raymarchMaterial.SetFloat("_handSize", handScale);
+
+        _raymarchMaterial.SetVector("_sierpinski", sierpinski1);
+        _raymarchMaterial.SetVector("_sierpScale", sierpScale1);
+        _raymarchMaterial.SetInt("_sierpIterations", sierpIterations);
+
+        _raymarchMaterial.SetVector("_menger", menger1);
+        _raymarchMaterial.SetFloat("_mengerScale", mengerScale1);
+        _raymarchMaterial.SetInt("_mengerIterations", mengerIterations);
+
+
 
 
         RenderTexture.active = destination;
@@ -154,5 +186,12 @@ public class Raymarch : MonoBehaviour
         frustum.SetRow(3, BL);
 
         return frustum;
+    }
+    private float Distance(Vector3 p1, Vector3 p2)
+    {
+        float dx = p2.x - p1.x;
+        float dy = p2.y - p1.y;
+        float dz = p2.z - p1.z;
+        return Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
     }
 }

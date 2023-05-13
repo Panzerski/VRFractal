@@ -29,7 +29,7 @@ Shader "Raymarching"
             uniform float _maxDistance;
             uniform int _MaxIterations;
             uniform float _Accuracy;
-            uniform float4 _sphere1, _box1;
+            uniform float4 _sphere1, _box1, _sierpinski1;
             uniform float _handSize;
             uniform float3 _LightDir,_LightCol;
             uniform float _LightIntensity;
@@ -37,9 +37,18 @@ Shader "Raymarching"
             uniform float2 _ShadowDistance;
             uniform float _ShadowIntensity;
             uniform float _ShadowPenumbra;
+            uniform float4 _FogColor;
+            uniform float _FogDensity;
+
+            uniform float3 _sierpinski;
+            uniform float3 _sierpScale;
+            uniform int _sierpIterations;
+
+            uniform float3 _menger;
+            uniform float _mengerScale;
+            uniform int _mengerIterations;
 
             uniform float3 _LConPos,_RConPos;
-
 
             struct appdata
             {
@@ -75,14 +84,34 @@ Shader "Raymarching"
                 return o;
             }
 
+            uniform float3 c;
+
+            float FogFactor(float d)
+            {
+                return 1.0 - exp(-_FogDensity * d);
+            }
+
             float distanceField(float3 p)
             {
                 float Sphere1 = sdSphere(p - _sphere1.xyz, _sphere1.w);
                 float Box1 = sdBox(p - _box1.xyz, _box1.www);
                 float Hand1 = sdSphere(p - _LConPos, _handSize);
                 float Hand2 = sdSphere(p - _RConPos, _handSize);
+                //float Sierpinski1 = sdSierpinski(p - _sierpinski, _sierpScale, _sierpIterations);
+                //float Sierpinski1 = DE(p - _sierpinski, _sierpScale, _sierpIterations);
+                //float Sierpinski1 = DE(p, 1.0, 5);
+                float Sierpinski1 = sdSierpinski(p, 1.0, 5);
+                float Menger1 = sdMenger(p - _menger, _mengerScale, _mengerIterations);
+                
 
-                return opU(opU(Sphere1,Box1),opU(Hand1,Hand2));
+                float3 offset = (-1000, -1000, -1000);
+                float InfSphere = sdInfSphere(p - _sphere1.xyz-offset, _sphere1.w,c);
+
+
+                //return opU(opU(Sierpinski1,Box1),opU(Hand1,Hand2));
+                //return Sierpinski1;
+                //return Menger1;
+                return InfSphere;
             }
 
             float3 getNormal(float3 p)
@@ -157,9 +186,7 @@ Shader "Raymarching"
                 return result;
             }
 
-            fixed4 raymarching(float3 ro, float3 rd
-                //,float depth
-            )
+            fixed4 raymarching(float3 ro, float3 rd)
             {
                 fixed4 result = fixed4(1, 1, 1, 1);
 
@@ -168,15 +195,7 @@ Shader "Raymarching"
                 float t = 0;
                 for (int i = 0; i < max_iteration; i++)
                 {
-                    if (t > _maxDistance
-                        //|| t>=depth
-                        )
-                    {
-                        //result = fixed4(rd, 1);
-                        result = fixed4(0.2,0.2,0.2,1);
-
-                        break;
-                    }
+                    if (t > _maxDistance) break;
 
                     float3 p = ro + rd * t;
 
@@ -187,28 +206,24 @@ Shader "Raymarching"
                         float3 s = Shading(p, n);
 
                         result = fixed4(_mainColor.rgb*s, 1);
+                        result = lerp(result, _FogColor, FogFactor(t));
+
                         break;
                     }
+                    else result = _FogColor;
 
                     t += d;
 
                 }
-
 
                 return result;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                //float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
-                //depth *= length(i.ray);
-                //fixed3 col = tex2D(_MainTex, i.uv);
                 float3 rayDirection = normalize(i.ray.xyz);
                 float3 rayOrigin = _WorldSpaceCameraPos;
-                fixed4 result = raymarching(rayOrigin, rayDirection
-                   // ,depth
-                );
-                //return fixed4(col*(1.0-result.w)+result.xyz*result.w ,1.0);
+                fixed4 result = raymarching(rayOrigin, rayDirection);
                 return result;
             }
             ENDCG

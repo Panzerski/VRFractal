@@ -314,21 +314,30 @@ MonoBehaviour:
   conL: {fileID: 896635067}
   conR: {fileID: 1770613300}
   maxDistance: 1000
-  maxIterations: 2831
+  maxIterations: 300
   Accuracy: 0.0001
   directionalLight: {fileID: 705507995}
   LightCol: {r: 1, g: 1, b: 1, a: 1}
-  LightIntensity: 1.36
-  ShadowIntensity: 1.111
+  LightIntensity: 2.39
+  ShadowIntensity: 0.48
   ShadowDistance: {x: 0.8, y: 20}
-  ShadowPenumbra: 102.8
+  ShadowPenumbra: 67.4
   AoStepsize: 0.15
   AoIntensity: 0.059
   AoIterations: 3
-  mainColor: {r: 0.7798118, g: 0.85238355, b: 0.85882354, a: 1}
+  fogColor: {r: 0.6650944, g: 1, b: 0.9792842, a: 1}
+  fogDensity: 0.02
+  mainColor: {r: 0.42274833, g: 0.66644734, b: 0.7169812, a: 1}
   handScale: 0.08
-  sphere1: {x: 0, y: 1.12, z: 0.39, w: 0.08}
+  sierpIterations: 2
+  sierpScale1: {x: 0, y: 0, z: 0}
+  sierpinski1: {x: 2, y: 2, z: 2}
+  mengerIterations: 5
+  mengerScale1: 1
+  menger1: {x: 0, y: 0, z: 0}
+  sphere1: {x: 0, y: 0, z: 0, w: 0.15}
   box1: {x: 0, y: -20, z: 0, w: 20}
+  c: {x: 1, y: 1, z: 1}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
