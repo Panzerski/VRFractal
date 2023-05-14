@@ -110,8 +110,8 @@ Shader "Raymarching"
 
                 //return opU(opU(Sierpinski1,Box1),opU(Hand1,Hand2));
                 //return Sierpinski1;
-                //return Menger1;
-                return InfSphere;
+                return Menger1;
+                //return InfSphere;
             }
 
             float3 getNormal(float3 p)

@@ -329,10 +329,10 @@ MonoBehaviour:
   fogDensity: 0.02
   mainColor: {r: 0.42274833, g: 0.66644734, b: 0.7169812, a: 1}
   handScale: 0.08
-  sierpIterations: 2
+  sierpIterations: 3
   sierpScale1: {x: 0, y: 0, z: 0}
   sierpinski1: {x: 2, y: 2, z: 2}
-  mengerIterations: 5
+  mengerIterations: 1
   mengerScale1: 1
   menger1: {x: 0, y: 0, z: 0}
   sphere1: {x: 0, y: 0, z: 0, w: 0.15}
