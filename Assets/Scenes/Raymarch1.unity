@@ -319,22 +319,22 @@ MonoBehaviour:
   directionalLight: {fileID: 705507995}
   LightCol: {r: 1, g: 1, b: 1, a: 1}
   LightIntensity: 2.39
-  ShadowIntensity: 0.48
+  ShadowIntensity: 0.8
   ShadowDistance: {x: 0.8, y: 20}
-  ShadowPenumbra: 67.4
-  AoStepsize: 0.15
-  AoIntensity: 0.059
+  ShadowPenumbra: 46.1
+  AoStepsize: 0.11
+  AoIntensity: 0.135
   AoIterations: 3
-  fogColor: {r: 0.6650944, g: 1, b: 0.9792842, a: 1}
+  fogColor: {r: 0.73295456, g: 0.81113636, b: 0.86, a: 1}
   fogDensity: 0.02
-  mainColor: {r: 0.42274833, g: 0.66644734, b: 0.7169812, a: 1}
+  mainColor: {r: 0.5882353, g: 0.6491797, b: 0.6901961, a: 1}
   handScale: 0.08
   sierpIterations: 3
   sierpScale1: {x: 0, y: 0, z: 0}
   sierpinski1: {x: 2, y: 2, z: 2}
-  mengerIterations: 1
-  mengerScale1: 1
-  menger1: {x: 0, y: 0, z: 0}
+  mengerIterations: 8
+  mengerScale1: 100
+  menger1: {x: 148.9, y: 70.7, z: 175.6}
   sphere1: {x: 0, y: 0, z: 0, w: 0.15}
   box1: {x: 0, y: -20, z: 0, w: 20}
   c: {x: 1, y: 1, z: 1}

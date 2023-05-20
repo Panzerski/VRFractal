@@ -22,7 +22,7 @@ float sdTorus(float3 p, float2 t)
 	return length(q) - t.y;
 }
 // Krzyz
-//
+// scale: skala
 float sdCross(float3 p, float scale)
 {
     float inf = 1e20;
@@ -32,8 +32,6 @@ float sdCross(float3 p, float scale)
     float dc = sdBox(p.zxy, float3(scale, scale, inf));
     return min(da, min(db, dc));
 }
-
-// BOOLEAN OPERATORS //
 
 // Union
 float opU(float d1, float d2)
@@ -59,97 +57,34 @@ float opI(float d1, float d2)
 float sdInfSphere(float3 p, float r, float3 c)
 {
     p = fmod(p, c) - c * 0.5;
-    return length(p) - r;
+    return sdSphere(p, r);
 }
-float sdCrossing(float3 p, float distance, float s,int r)
+float finitCross(float3 p, float s, float c, float3 l)
 {
-        float3 tp = p;
-        
-        if(r>0) distance = opS(sdCross(p, s / 3), distance);
-    
-        if (r > 1)
-        {
-            //pierwsze narożniki
-            tp += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
+    p = p - c * clamp(round(p / c), -l, l);
 
-            tp -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            //środkowe
-            tp.xy -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xz -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.yz -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xy += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xz += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.yz += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            //pozostałe narożniki
-            tp.xy -= s * 2 / 3;
-            tp.z += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xy += s * 2 / 3;
-            tp.z -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xz -= s * 2 / 3;
-            tp.y += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.xz += s * 2 / 3;
-            tp.y -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.yz -= s * 2 / 3;
-            tp.x += s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            tp.yz += s * 2 / 3;
-            tp.x -= s * 2 / 3;
-            distance = sdCrossing(tp, distance, s / 9, r - 1);
-            tp = p;
-
-            r -= 1;
-        }
-
-        return distance;
+    return sdCross(p,s);
 }
 
 // Kostka Mengera
 float sdMenger(float3 p, float scale, int iterations)
 {
-    float distance = sdBox(p, float3(scale, scale, scale));
+    float distance = sdBox(p, float3(scale*3, scale*3, scale*3));
+    float3 tp = p;
+    float mainCross = sdCross(p, scale);
+    float finCross;
+    distance = opS(mainCross, distance);
 
-    distance = sdCrossing(p, distance, scale,iterations);
-    
+    for (int i = 0; i < iterations; i++)
+    {
+        finCross = finitCross(tp, scale / 3, 2 * scale, float3(1, 1, 1));
+        distance = opS(finCross, distance);
+        tp = tp - (scale * 2) * clamp(round(tp / (scale * 2)), -float3(1, 1, 1), float3(1, 1, 1));
+        scale /= 3;
+    }
+
     return distance;
 }
-
 // Czworościan Sierpińskiego
 float sdSierpinski(float3 p, float3 scale, int iterations)
 {
