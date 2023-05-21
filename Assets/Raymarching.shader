@@ -110,7 +110,7 @@ Shader "Raymarching"
 
                 //return opU(opU(Sierpinski1,Box1),opU(Hand1,Hand2));
                 //return Sierpinski1;
-                return Menger1;
+                return opU(Menger1,opU(Hand1,Hand2));
                 //return InfSphere;
             }
 
@@ -204,6 +204,7 @@ Shader "Raymarching"
                     {
                         float3 n = getNormal(p);
                         float3 s = Shading(p, n);
+                        //float3 s = (1, 1, 1);
 
                         result = fixed4(_mainColor.rgb*s, 1);
                         result = lerp(result, _FogColor, FogFactor(t));

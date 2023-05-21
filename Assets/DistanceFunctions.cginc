@@ -21,17 +21,6 @@ float sdTorus(float3 p, float2 t)
 	float2 q = float2(length(p.xz) - t.x, p.y);
 	return length(q) - t.y;
 }
-// Krzyz
-// scale: skala
-float sdCross(float3 p, float scale)
-{
-    float inf = 1e20;
-
-    float da = sdBox(p.xyz, float3(inf, scale, scale));
-    float db = sdBox(p.yzx, float3(scale, inf, scale));
-    float dc = sdBox(p.zxy, float3(scale, scale, inf));
-    return min(da, min(db, dc));
-}
 
 // Union
 float opU(float d1, float d2)
@@ -59,6 +48,22 @@ float sdInfSphere(float3 p, float r, float3 c)
     p = fmod(p, c) - c * 0.5;
     return sdSphere(p, r);
 }
+
+// Krzyż
+float sdCross(float3 p, float scale)
+{
+    float inf = 1e20;
+
+    float da = sdBox(p.xyz, float3(inf, scale, scale));
+    float db = sdBox(p.yzx, float3(scale, inf, scale));
+    float dc = sdBox(p.zxy, float3(scale, scale, inf));
+    return min(da, min(db, dc));
+}
+
+// Skończone Powtarzanie Krzyża
+// s: skala
+// c: odstęp
+// l: wektor z liczbą powtórzeń w danej osi
 float finitCross(float3 p, float s, float c, float3 l)
 {
     p = p - c * clamp(round(p / c), -l, l);

@@ -315,20 +315,20 @@ MonoBehaviour:
   conR: {fileID: 1770613300}
   maxDistance: 1000
   maxIterations: 300
-  Accuracy: 0.0001
+  Accuracy: 0.008
   directionalLight: {fileID: 705507995}
   LightCol: {r: 1, g: 1, b: 1, a: 1}
-  LightIntensity: 2.39
-  ShadowIntensity: 0.8
+  LightIntensity: 2.85
+  ShadowIntensity: 0.46
   ShadowDistance: {x: 0.8, y: 20}
   ShadowPenumbra: 46.1
-  AoStepsize: 0.11
-  AoIntensity: 0.135
+  AoStepsize: 0.55
+  AoIntensity: 0.137
   AoIterations: 3
-  fogColor: {r: 0.73295456, g: 0.81113636, b: 0.86, a: 1}
+  fogColor: {r: 0.68467426, g: 0.83401734, b: 0.9245283, a: 1}
   fogDensity: 0.02
-  mainColor: {r: 0.5882353, g: 0.6491797, b: 0.6901961, a: 1}
-  handScale: 0.08
+  mainColor: {r: 0.51067996, g: 0.63797224, b: 0.7169812, a: 1}
+  handScale: 0.01
   sierpIterations: 3
   sierpScale1: {x: 0, y: 0, z: 0}
   sierpinski1: {x: 2, y: 2, z: 2}

@@ -76,7 +76,7 @@ public class Raymarch : MonoBehaviour
     public Color mainColor;
     public float handScale;
 
-    [Header("Signed Distance Field: Sierpinskis Tetrahedron")]
+    [Header("Signed Distance Field: Sierpinskis Tetrahedron (test)")]
     public int sierpIterations;
     public Vector3 sierpScale1;
     public Vector3 sierpinski1;
