@@ -367,9 +367,11 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.XR.LegacyInputHelpers.ref.dll"
 "Assets/Scripts/geometry1.cs"
 "Assets/Scripts/geometry2.cs"
+"Assets/Scripts/InputHandler.cs"
 "Assets/Scripts/Main.cs"
 "Assets/Scripts/MeshCombine.cs"
 "Assets/Scripts/Raymarch.cs"
+"Assets/Scripts/SceneLoader.cs"
 "Assets/Scripts/SceneViewFilter.cs"
 -langversion:9.0
 
