@@ -25,11 +25,12 @@ Shader "Raymarching"
             sampler2D _MainTex;
             
             //uniform sampler2D _CameraDepthTexture;
+
+            //G³ówne
             uniform float4x4 _CamFrustum, _CamToWorldMatrix;
             uniform float _maxDistance;
             uniform int _MaxIterations;
             uniform float _Accuracy;
-            uniform float4 _sphere1, _box1, _sierpinski1;
             uniform float _handSize;
             uniform float3 _LightDir,_LightCol;
             uniform float _LightIntensity;
@@ -40,15 +41,20 @@ Shader "Raymarching"
             uniform float4 _FogColor;
             uniform float _FogDensity;
 
-            uniform float3 _sierpinski;
-            uniform float3 _sierpScale;
-            uniform int _sierpIterations;
+            uniform int _fractalIndex;
+            uniform float3 _LConPos, _RConPos;
 
-            uniform float3 _menger;
-            uniform float _mengerScale;
-            uniform int _mengerIterations;
+            uniform float Angle1;
+            uniform float3 Rot1;
+            uniform float Angle2;
+            uniform float3 Rot2;
 
-            uniform float3 _LConPos,_RConPos;
+            uniform float3 Position;
+            uniform float Phi;
+            uniform float Scale;
+            uniform float3 Offset;
+            uniform float Scale2;
+            uniform int Iterations;
 
             struct appdata
             {
@@ -91,27 +97,45 @@ Shader "Raymarching"
                 return 1.0 - exp(-_FogDensity * d);
             }
 
+            float4x4 M;
+            void init() {
+                float4x4 fracRotation2 = rotationMatrix(normalize(Rot2), Angle2);
+                float4x4 fracRotation1 = rotationMatrix(normalize(Rot1), Angle1);
+                M = fracRotation2 * translate(Offset) * scale4(Scale) * translate(-Offset) * fracRotation1;
+            }
+
             float distanceField(float3 p)
             {
-                float Sphere1 = sdSphere(p - _sphere1.xyz, _sphere1.w);
-                float Box1 = sdBox(p - _box1.xyz, _box1.www);
                 float Hand1 = sdSphere(p - _LConPos, _handSize);
                 float Hand2 = sdSphere(p - _RConPos, _handSize);
-                //float Sierpinski1 = sdSierpinski(p - _sierpinski, _sierpScale, _sierpIterations);
-                //float Sierpinski1 = DE(p - _sierpinski, _sierpScale, _sierpIterations);
-                //float Sierpinski1 = DE(p, 1.0, 5);
-                float Sierpinski1 = sdSierpinski(p, 1.0, 5);
-                float Menger1 = sdMenger(p - _menger, _mengerScale, _mengerIterations);
+                float distance;
+                switch (_fractalIndex)
+                {
+                case 1:
+                    float Menger1 = sdMenger(p - Position, Scale, Iterations);
+                    distance=opU(Menger1, opU(Hand1, Hand2));
+                    break;
+                case 2:
+                    float Sierpinski3 = sdSierpinski3(p - Position, Scale, Scale2, Iterations);
+                    distance = opU(Sierpinski3, opU(Hand1, Hand2));
+                    break;
+                case 3:
+                    float3 offsetSphere = (-1000, -1000, -1000);
+                    float InfSphere = sdInfSphere(p - Position - offsetSphere, Scale, Offset);
+                    distance = opU(InfSphere, opU(Hand1, Hand2));
+                    break;
+                case 4:
+                    float Sierpinski2 = sdSierpinski2(p - Position, Scale, Scale2, Offset.x, Iterations);
+                    distance = opU(Sierpinski2, opU(Hand1, Hand2));
+                    break;
+                default:
+                    float Sphere1 = sdSphere(p - Position, Scale);
+                    float Box1 = sdBox(p - Position, Scale);
+                    distance = opU(Sphere1, Box1);
+                    break;
+                }
                 
-
-                float3 offset = (-1000, -1000, -1000);
-                float InfSphere = sdInfSphere(p - _sphere1.xyz-offset, _sphere1.w,c);
-
-
-                //return opU(opU(Sierpinski1,Box1),opU(Hand1,Hand2));
-                //return Sierpinski1;
-                return opU(Menger1,opU(Hand1,Hand2));
-                //return InfSphere;
+                return distance;
             }
 
             float3 getNormal(float3 p)
@@ -179,6 +203,7 @@ Shader "Raymarching"
 
                 float shadow = softShadow(p, -_LightDir, _ShadowDistance.x, _ShadowDistance.y,_ShadowPenumbra) * 0.5 + 0.5;
                 shadow = max(0.0,pow(shadow, _ShadowIntensity));
+                //float ao = 1;
                 float ao = AmbientOcclusion(p, n);
 
                 result = color * light * shadow * ao;

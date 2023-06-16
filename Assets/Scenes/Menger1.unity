@@ -313,29 +313,41 @@ MonoBehaviour:
   _shader: {fileID: 4800000, guid: acb45f927c7742241af5afd2291c6d92, type: 3}
   conL: {fileID: 896635067}
   conR: {fileID: 1770613300}
-  maxDistance: 1000
-  maxIterations: 300
-  Accuracy: 0.008
+  maxDistance: 160
+  maxIterations: 131
+  Accuracy: 0.004
   directionalLight: {fileID: 705507995}
   LightCol: {r: 1, g: 1, b: 1, a: 1}
-  LightIntensity: 2.85
-  ShadowIntensity: 0.46
-  ShadowDistance: {x: 0.8, y: 20}
+  LightIntensity: 2.75
+  ShadowIntensity: 0.3
+  ShadowDistance: {x: 0.01, y: 20}
   ShadowPenumbra: 46.1
-  AoStepsize: 0.55
-  AoIntensity: 0.137
+  AoStepsize: 0.44
+  AoIntensity: 0.223
   AoIterations: 3
   fogColor: {r: 0.68467426, g: 0.83401734, b: 0.9245283, a: 1}
-  fogDensity: 0.02
+  fogDensity: 0.03
   mainColor: {r: 0.51067996, g: 0.63797224, b: 0.7169812, a: 1}
   handScale: 0.05
-  sierpIterations: 3
-  sierpScale1: {x: 0, y: 0, z: 0}
-  sierpinski1: {x: 2, y: 2, z: 2}
-  mengerIterations: 7
+  fractalIndex: 1
+  Angle1: 0
+  Rot1: {x: 0, y: 0, z: 0}
+  Angle2: 0
+  Rot2: {x: 0, y: 0, z: 0}
+  Position: {x: 148.9, y: 70.7, z: 175.6}
+  Phi: 0
+  Scale: 100
+  Offset: {x: 0, y: 0, z: 0}
+  Iterations: 6
+  sierpIFSIterations: 15
+  sierpScale1: 2
+  sierpScale2: 4.22
+  sierpOffset: 1
+  sierpinski1: {x: 0, y: 1, z: 0}
+  mengerIterations: 6
   mengerScale1: 100
   menger1: {x: 148.9, y: 70.7, z: 175.6}
-  sphere1: {x: 0, y: 0, z: 0, w: 0.15}
+  sphere1: {x: 0, y: 1, z: 2.93, w: 1}
   box1: {x: 0, y: -20, z: 0, w: 20}
   c: {x: 1, y: 1, z: 1}
 --- !u!1 &705507993
@@ -479,6 +491,7 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
+  m_SortAtRoot: 0
 --- !u!114 &896635069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,6 +629,7 @@ MonoBehaviour:
   m_SnapEndpointIfAvailable: 1
 --- !u!120 &896635070
 LineRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -709,10 +723,13 @@ LineRenderer:
     numCapVertices: 4
     alignment: 0
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
+  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+  m_ApplyActiveColorSpace: 0
 --- !u!114 &896635071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1332,6 +1349,7 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
+  m_SortAtRoot: 0
 --- !u!114 &1770613302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1469,6 +1487,7 @@ MonoBehaviour:
   m_SnapEndpointIfAvailable: 1
 --- !u!120 &1770613303
 LineRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1562,10 +1581,13 @@ LineRenderer:
     numCapVertices: 4
     alignment: 0
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
+  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+  m_ApplyActiveColorSpace: 0
 --- !u!114 &1770613304
 MonoBehaviour:
   m_ObjectHideFlags: 0

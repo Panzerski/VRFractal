@@ -40,6 +40,49 @@ float opI(float d1, float d2)
 	return max(d1, d2);
 }
 
+float3x3  rotationMatrix3(float3 v, float angle)
+{
+    float c = cos(radians(angle));
+    float s = sin(radians(angle));
+
+    return float3x3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,
+        (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,
+        (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z
+    );
+}
+
+float3x3 rotationMatrixXYZ(float3 v) {
+    return rotationMatrix3(float3(1.0, 0.0, 0.0), v.x) *
+        rotationMatrix3(float3(0.0, 1.0, 0.0), v.y) *
+        rotationMatrix3(float3(0.0, 0.0, 1.0), v.z);
+}
+
+// Return rotation matrix for rotating around vector v by angle
+float4x4  rotationMatrix(float3 v, float angle)
+{
+    float c = cos(radians(angle));
+    float s = sin(radians(angle));
+
+    return float4x4(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y, 0.0,
+        (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x, 0.0,
+        (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z, 0.0,
+        0.0, 0.0, 0.0, 1.0);
+}
+
+float4x4 translate(float3 v) {
+    return float4x4(1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        v.x, v.y, v.z, 1.0);
+}
+
+float4x4 scale4(float s) {
+    return float4x4(s, 0.0, 0.0, 0.0,
+        0.0, s, 0.0, 0.0,
+        0.0, 0.0, s, 0.0,
+        0.0, 0.0, 0.0, 1.0);
+}
+
 // Nieskonczone sfery
 // r: promień
 // c: odstęp
@@ -91,79 +134,115 @@ float sdMenger(float3 p, float scale, int iterations)
     return distance;
 }
 // Czworościan Sierpińskiego
-float sdSierpinski(float3 p, float3 scale, int iterations)
+float sdSierpinski(float3 z, float Scale,float Scale2, float Offset, int iterations)
 {
-    float sqrt2 = sqrt(2.0);
-
-    // Initial tetrahedron vertices
-    float3 vertices[4] = {
-        float3(0, 0, sqrt2 / 3),
-        float3(sqrt2 / 2, 0, -sqrt2 / 6),
-        float3(sqrt2 / 4, sqrt2 / 2, -sqrt2 / 6),
-        float3(sqrt2 / 4, sqrt2 / 6, sqrt2 / 2)
-    };
-
-    float dist = 1e20;
-
-    // Perform iterations of subdivision
-    for (int i = 0; i < iterations; i++)
-    {
-        float3 tempVertices[4];
-
-        // Subdivide each face of the tetrahedron
-        for (int j = 0; j < 4; j++)
-        {
-            tempVertices[0] = vertices[j];
-            tempVertices[1] = (vertices[(j + 1) % 4] + vertices[j]) * 0.5;
-            tempVertices[2] = (vertices[(j + 2) % 4] + vertices[j]) * 0.5;
-            tempVertices[3] = (vertices[(j + 3) % 4] + vertices[j]) * 0.5;
-
-            // Replace vertices with subdivided faces
-            for (int k = 0; k < 4; k++)
-            {
-                vertices[j] = tempVertices[k];
-                // Apply scaling
-                vertices[j].x *= scale.x;
-                vertices[j].y *= scale.y;
-                vertices[j].z *= scale.z;
-
-                // Calculate the distance from the point to the current face
-                float currDist = length(p - vertices[j]);
-                if (currDist < dist)
-                    dist = currDist;
-            }
-        }
-    }
-    return dist;
-}
-
-float DE(float3 z,float Scale,int Iterations)
-{
-    float3 a1 = float3(1, 1, 1);
-    float3 a2 = float3(-1, -1, 1);
-    float3 a3 = float3(1, -1, -1);
-    float3 a4 = float3(-1, 1, -1);
-    float3 c;
     int n = 0;
-    float dist, d;
-    while (n < Iterations) {
-        c = a1; dist = length(z - a1);
-        d = length(z - a2); if (d < dist) { c = a2; dist = d; }
-        d = length(z - a3); if (d < dist) { c = a3; dist = d; }
-        d = length(z - a4); if (d < dist) { c = a4; dist = d; }
-        z = Scale * z - c * (Scale - 1.0);
+    z = z * 1 / Scale2;
+
+    while (n < iterations) {
+
+        //z = rotate2(z);
+        //z = rotate1(z);
+
+        if (z.x + z.y < 0.0) z.xy = -z.yx;
+        if (z.x + z.z < 0.0) z.xz = -z.zx;
+        if (z.y + z.z < 0.0) z.zy = -z.yz;
+
+        //z = rotate2(z);
+        //z = rotate1(z);
+
+        z = z * Scale - Offset * (Scale - 1.0);
         n++;
     }
-
-    return length(z) * pow(Scale, float(-n));
+    return length(z) * pow(Scale, -float(n));
 }
 
-// Mod Position Axis
-float pMod1 (inout float p, float size)
+float sdSierpinski2(float3 z, float Scale, float Scale2, float Offset, int iterations)
 {
-	float halfsize = size * 0.5;
-	float c = floor((p+halfsize)/size);
-	p = fmod(p+halfsize,size)-halfsize;
-	p = fmod(-p+halfsize,size)-halfsize;
-	return c;
+    int n = 0;
+    z = z * 1/Scale2;
+
+    while (n < iterations) {
+        if (z.x + z.y < 0.0) z.xy = -z.yx;
+        if (z.x + z.z < 0.0) z.xz = -z.zx;
+        if (z.x - z.y < 0.0) z.xy = z.yx;
+        if (z.x - z.z < 0.0) z.xz = z.zx;
+
+        z.x = z.x * Scale - Offset * (Scale - 1.0);
+        z.y = z.y * Scale;
+        z.z = z.z * Scale;
+
+        n++;
+    }
+    return (length(z) * pow(Scale, -float(n)));
+}
+
+float sdSierpinski3(float3 p, float Scale, float Scale2, int iterations)
+{
+    p = p * 1 / Scale2;
+    
+    float3 va = float3(0.0, 0.575735, 0.0)*Scale;
+    float3 vb = float3(0.0, -1.0, 1.15470)*Scale;
+    float3 vc = float3(1.0, -1.0, -0.57735)*Scale;
+    float3 vd = float3(-1.0, -1.0, -0.57735)*Scale;
+
+    float a = 0;
+    float s = 1;
+    float r = 1;
+    float dm;
+    float3 v;
+    [loop]
+    for (int i = 0; i < iterations; i++)
+    {
+        float d, t;
+        d = dot(p - va, p - va);
+
+        v = va;
+        dm = d;
+        t = 0;
+
+        d = dot(p - vb, p - vb);
+        if (d < dm)
+        {
+            v = vb;
+            dm = d;
+            t = 1.0;
+        }
+
+        d = dot(p - vc, p - vc);
+
+        if (d < dm) { v = vc; dm = d; t = 2.0; }
+        d = dot(p - vd, p - vd);
+        if (d < dm) { v = vd; dm = d; t = 3.0; }
+
+        p = v + 2 * (p - v);
+        r *= 2;
+        a = t + 4 * a;
+        s *= 4;
+    }
+
+    return float2((sqrt(dm) - 1.0) / r, a / s);
+}
+
+float sdMandelbulb(float3 p,float scale, int iterations)
+{
+    p = p * 1/scale;
+    float3 w = p;
+    float m = dot(w, w);
+
+    float dz = 1.0;
+
+    for (int i = 0; i < iterations; i++)
+    {
+        dz = 8 * pow(sqrt(m), 7.0) * dz + 1.0;
+        float r = length(w);
+        float b = 8 * acos(w.y / r);
+        float a = 8 * atan2(w.x, w.z);
+        w = p + pow(r, 8) * float3(sin(b) * sin(a), cos(b), sin(b) * cos(a));
+
+        m = dot(w, w);
+        if (m > 256.0)
+            break;
+    }
+    return 0.25 * log(m) * sqrt(m) / dz;
 }

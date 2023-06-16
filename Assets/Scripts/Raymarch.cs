@@ -35,6 +35,7 @@ public class Raymarch : MonoBehaviour
             return _cam;
         }
     }
+
     private Camera _cam;
     [Header("Controllers")]
     public Transform conL;
@@ -70,26 +71,29 @@ public class Raymarch : MonoBehaviour
 
     [Header("Distance Fog")]
     public Color fogColor;
+    [Range(0.0f,1.0f)]
     public float fogDensity;
 
     [Header("Signed Distance Field: Main")]
     public Color mainColor;
     public float handScale;
+    [Range(1,5)]
+    public int fractalIndex;
 
-    [Header("Signed Distance Field: Sierpinskis Tetrahedron (test)")]
-    public int sierpIterations;
-    public Vector3 sierpScale1;
-    public Vector3 sierpinski1;
-
-    [Header("Signed Distance Field: Mengers Cube")]
-    public int mengerIterations;
-    public float mengerScale1;
-    public Vector3 menger1;
-
-    [Header("Signed Distance Field: Other(test)")]
-    public Vector4 sphere1, box1;
-    public Vector3 c;
-
+    [Header("Signed Distance Field: to be Main :)")]
+    [Range(-180, 180)]
+    public float Angle1;
+    public Vector3 Rot1;
+    [Range(-180, 180)]
+    public float Angle2;
+    public Vector3 Rot2;
+    public Vector3 Position;
+    [Range(-5,5)]
+    public float Phi;
+    public float Scale;
+    public Vector3 Offset;
+    public int Iterations;
+    public float Scale2;
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -99,7 +103,6 @@ public class Raymarch : MonoBehaviour
             return;
         }
 
-        _raymarchMaterial.SetVector("c", c);
 
         _raymarchMaterial.SetColor("_FogColor", fogColor);
         _raymarchMaterial.SetFloat("_FogDensity", fogDensity);
@@ -126,21 +129,21 @@ public class Raymarch : MonoBehaviour
         _raymarchMaterial.SetVector("_ShadowDistance", ShadowDistance);
         _raymarchMaterial.SetFloat("_ShadowPenumbra", ShadowPenumbra);
         
-        _raymarchMaterial.SetVector("_sphere1", sphere1);
-        _raymarchMaterial.SetVector("_box1", box1);
         _raymarchMaterial.SetColor("_mainColor", mainColor);
         _raymarchMaterial.SetFloat("_handSize", handScale);
 
-        _raymarchMaterial.SetVector("_sierpinski", sierpinski1);
-        _raymarchMaterial.SetVector("_sierpScale", sierpScale1);
-        _raymarchMaterial.SetInt("_sierpIterations", sierpIterations);
+        _raymarchMaterial.SetInt("_fractalIndex", fractalIndex);
 
-        _raymarchMaterial.SetVector("_menger", menger1);
-        _raymarchMaterial.SetFloat("_mengerScale", mengerScale1);
-        _raymarchMaterial.SetInt("_mengerIterations", mengerIterations);
-
-
-
+        _raymarchMaterial.SetFloat("Angle1", Angle1);
+        _raymarchMaterial.SetFloat("Angle2", Angle2);
+        _raymarchMaterial.SetVector("Rot1", Rot1);
+        _raymarchMaterial.SetVector("Rot2", Rot2);
+        _raymarchMaterial.SetVector("Position", Position);
+        _raymarchMaterial.SetFloat("Phi", Phi);
+        _raymarchMaterial.SetFloat("Scale", Scale);
+        _raymarchMaterial.SetFloat("Scale2", Scale2);
+        _raymarchMaterial.SetVector("Offset", Offset);
+        _raymarchMaterial.SetInt("Iterations", Iterations);
 
         RenderTexture.active = destination;
        // _raymarchMaterial.SetTexture("_MainTex",source);
