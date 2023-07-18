@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4511267, g: 0.49971694, b: 0.56751823, a: 1}
+  m_IndirectSpecularColor: {r: 0.00406742, g: 0.00022238835, b: 0.000000056144785, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -314,30 +314,30 @@ MonoBehaviour:
   conL: {fileID: 896635067}
   conR: {fileID: 1770613300}
   maxDistance: 100
-  maxIterations: 274
-  Accuracy: 0.002
+  maxIterations: 300
+  Accuracy: 0.004
   directionalLight: {fileID: 705507995}
   LightCol: {r: 1, g: 1, b: 1, a: 1}
-  LightIntensity: 2.29
-  ShadowIntensity: 0.46
+  LightIntensity: 2.77
+  ShadowIntensity: 0.68
   ShadowDistance: {x: 0.8, y: 20}
   ShadowPenumbra: 46.1
   AoStepsize: 0.55
-  AoIntensity: 0.137
+  AoIntensity: 0.389
   AoIterations: 3
-  fogColor: {r: 0.27, g: 0.20717824, b: 0.22722775, a: 1}
-  fogDensity: 0.137
-  mainColor: {r: 0.7924528, g: 0.60929155, b: 0.6684952, a: 1}
+  fogColor: {r: 0.7318057, g: 0.9150943, b: 0.5740922, a: 1}
+  fogDensity: 0.2
+  mainColor: {r: 1, g: 0.9100954, b: 0.21226418, a: 1}
   handScale: 0.01
-  fractalIndex: 4
+  fractalIndex: 5
   Angle1: 0
-  Rot1: {x: 0, y: 0, z: 0}
+  Rot1: {x: -0.53, y: -0.08, z: -3.59}
   Angle2: 0
-  Rot2: {x: 0, y: 0, z: 0}
-  Position: {x: 2.12, y: 0.57, z: 3.3}
+  Rot2: {x: 0.62, y: 0, z: 0.08}
+  Position: {x: 5.81, y: -0.93, z: 4.47}
   Phi: 0
   Scale: 2
-  Offset: {x: 3.66, y: 0, z: 0}
+  Offset: {x: 6.71, y: 0, z: 0}
   Iterations: 15
   Scale2: 1
 --- !u!1 &705507993
@@ -426,14 +426,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: -0.024228862, y: -0.38751033, z: 0.5872673, w: 0.7101872}
+  m_LocalRotation: {x: -0.66087765, y: -0.61133134, z: -0.41688713, w: 0.12537901}
   m_LocalPosition: {x: 0.1, y: 2.55, z: -0.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 155.119, y: -219.65, z: -109.918}
+  m_LocalEulerAnglesHint: {x: 222.488, y: -392.639, z: -72.552}
 --- !u!1 &896635066
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,6 @@ public class Raymarch : MonoBehaviour
 {
     [SerializeField]
     private Shader _shader;
-
     public Material _raymarchMaterial
     {
         get
@@ -21,9 +20,7 @@ public class Raymarch : MonoBehaviour
             return _raymarchMat;
         }
     }
-
     private Material _raymarchMat;
-
     public Camera _camera
     {
         get
@@ -35,8 +32,8 @@ public class Raymarch : MonoBehaviour
             return _cam;
         }
     }
-
     private Camera _cam;
+
     [Header("Controllers")]
     public Transform conL;
     public Transform conR;
@@ -77,22 +74,19 @@ public class Raymarch : MonoBehaviour
     [Header("Signed Distance Field: Main")]
     public Color mainColor;
     public float handScale;
-    [Range(1,5)]
+    [Range(1,8)]
     public int fractalIndex;
 
-    [Header("Signed Distance Field: to be Main :)")]
-    [Range(-180, 180)]
-    public float Angle1;
-    public Vector3 Rot1;
-    [Range(-180, 180)]
-    public float Angle2;
-    public Vector3 Rot2;
+    [Header("Signed Distance Field: Fractal")]
     public Vector3 Position;
-    [Range(-5,5)]
-    public float Phi;
+    public Vector3 Rot1;
+    public Vector3 Rot2;
+    //Skala Iteracji
     public float Scale;
     public Vector3 Offset;
+    public float Offset2;
     public int Iterations;
+    //Skala Ca³oœci
     public float Scale2;
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -102,8 +96,6 @@ public class Raymarch : MonoBehaviour
             Graphics.Blit(source, destination);
             return;
         }
-
-
         _raymarchMaterial.SetColor("_FogColor", fogColor);
         _raymarchMaterial.SetFloat("_FogDensity", fogDensity);
 
@@ -134,15 +126,13 @@ public class Raymarch : MonoBehaviour
 
         _raymarchMaterial.SetInt("_fractalIndex", fractalIndex);
 
-        _raymarchMaterial.SetFloat("Angle1", Angle1);
-        _raymarchMaterial.SetFloat("Angle2", Angle2);
         _raymarchMaterial.SetVector("Rot1", Rot1);
         _raymarchMaterial.SetVector("Rot2", Rot2);
         _raymarchMaterial.SetVector("Position", Position);
-        _raymarchMaterial.SetFloat("Phi", Phi);
         _raymarchMaterial.SetFloat("Scale", Scale);
         _raymarchMaterial.SetFloat("Scale2", Scale2);
         _raymarchMaterial.SetVector("Offset", Offset);
+        _raymarchMaterial.SetFloat("Offset2", Offset2);
         _raymarchMaterial.SetInt("Iterations", Iterations);
 
         RenderTexture.active = destination;
@@ -189,12 +179,5 @@ public class Raymarch : MonoBehaviour
         frustum.SetRow(3, BL);
 
         return frustum;
-    }
-    private float Distance(Vector3 p1, Vector3 p2)
-    {
-        float dx = p2.x - p1.x;
-        float dy = p2.y - p1.y;
-        float dz = p2.z - p1.z;
-        return Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
     }
 }

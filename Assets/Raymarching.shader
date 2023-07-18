@@ -44,15 +44,14 @@ Shader "Raymarching"
             uniform int _fractalIndex;
             uniform float3 _LConPos, _RConPos;
 
-            uniform float Angle1;
             uniform float3 Rot1;
-            uniform float Angle2;
             uniform float3 Rot2;
 
             uniform float3 Position;
             uniform float Phi;
             uniform float Scale;
             uniform float3 Offset;
+            uniform float3 Offset2;
             uniform float Scale2;
             uniform int Iterations;
 
@@ -97,13 +96,6 @@ Shader "Raymarching"
                 return 1.0 - exp(-_FogDensity * d);
             }
 
-            float4x4 M;
-            void init() {
-                float4x4 fracRotation2 = rotationMatrix(normalize(Rot2), Angle2);
-                float4x4 fracRotation1 = rotationMatrix(normalize(Rot1), Angle1);
-                M = fracRotation2 * translate(Offset) * scale4(Scale) * translate(-Offset) * fracRotation1;
-            }
-
             float distanceField(float3 p)
             {
                 float Hand1 = sdSphere(p - _LConPos, _handSize);
@@ -112,32 +104,35 @@ Shader "Raymarching"
                 switch (_fractalIndex)
                 {
                 case 1:
-                    float Menger1 = sdMenger(p - Position, Scale, Iterations);
-                    distance=opU(Menger1, opU(Hand1, Hand2));
+                    distance = sdMenger(p - Position, Scale, Iterations);
                     break;
                 case 2:
-                    float Sierpinski3 = sdSierpinski3(p - Position, Scale, Scale2, Iterations);
-                    distance = opU(Sierpinski3, opU(Hand1, Hand2));
+                    distance = sdSierpinski3(p - Position, Scale, Scale2, Iterations);
                     break;
                 case 3:
-                    float3 offsetSphere = (-1000, -1000, -1000);
-                    float InfSphere = sdInfSphere(p - Position - offsetSphere, Scale, Offset);
-                    distance = opU(InfSphere, opU(Hand1, Hand2));
+                    float3 offsetSphere = float3(-1000, -1000, -1000);
+                    distance = sdInfSphere(p - Position - offsetSphere, Scale, Offset);
                     break;
                 case 4:
-                    float Sierpinski2 = sdSierpinski2(p - Position, Scale, Scale2, Offset.x, Iterations);
-                    distance = opU(Sierpinski2, opU(Hand1, Hand2));
+                    distance = sdDoubleTetra(p - Position, Rot1, Rot2, Scale, Scale2, Offset.x, Iterations);
+                    break;
+                case 5:
+                    distance = sdOctohedron(p - Position, Rot1, Rot2, Scale, Scale2, Offset, Iterations);
+                    break;
+                case 6:
+                    distance = sdTetrahedron(p - Position, Rot1, Rot2, Scale, Scale2, Offset, Iterations);
+                    break;
+                case 7:
+                    distance = sdFullTetra(p - Position, Rot1, Rot2, Scale, Scale2, Offset, Offset2, Iterations);
                     break;
                 default:
-                    float Sphere1 = sdSphere(p - Position, Scale);
-                    float Box1 = sdBox(p - Position, Scale);
-                    distance = opU(Sphere1, Box1);
+                    distance = sdSphere(p - Position+float3(0,-1,0), Scale);
                     break;
                 }
-                
+                distance = opU(distance, opU(Hand1, Hand2));
                 return distance;
             }
-
+            
             float3 getNormal(float3 p)
             {
                 const float2 offset = float2(0.001, 0.0);
