@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/IFS2.unity
+- path: Assets/Scenes/IFS3.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

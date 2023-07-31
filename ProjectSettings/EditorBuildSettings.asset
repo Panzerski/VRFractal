@@ -11,6 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menger1.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/IFS1.unity
+    guid: a6e71d07c3f538e4589c706dea359b9e
+  - enabled: 1
+    path: Assets/Scenes/IFS2.unity
+    guid: 8fd793915b66d6c46ab2d1bac4155075
+  - enabled: 1
+    path: Assets/Scenes/IFS3.unity
+    guid: cecfc36d9229cf64ca80b7f350419309
+  - enabled: 1
+    path: Assets/Scenes/IFS4.unity
+    guid: 8328cfed03321b2458eff61e7eb5f090
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 40dc61e26c6dd834e9cdff17318b5680, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 85051eb8a850830459e077c209313fbd, type: 2}

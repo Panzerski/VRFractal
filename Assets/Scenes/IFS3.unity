@@ -314,8 +314,8 @@ MonoBehaviour:
   conL: {fileID: 896635067}
   conR: {fileID: 1770613300}
   maxDistance: 100
-  maxIterations: 300
-  Accuracy: 0.004
+  maxIterations: 100
+  Accuracy: 0.01
   directionalLight: {fileID: 705507995}
   LightCol: {r: 0.6117647, g: 0.9058824, b: 0.8078432, a: 1}
   LightIntensity: 3.74
@@ -323,21 +323,19 @@ MonoBehaviour:
   ShadowDistance: {x: 0.8, y: 20}
   ShadowPenumbra: 46.1
   AoStepsize: 0.55
-  AoIntensity: 0.333
-  AoIterations: 3
+  AoIntensity: 0.52
+  AoIterations: 2
   fogColor: {r: 0.61089355, g: 0.9056604, b: 0.808572, a: 1}
   fogDensity: 0.145
   mainColor: {r: 1, g: 0.5240903, b: 0.4669811, a: 1}
-  handScale: 0.01
+  handScale: 0.07
   fractalIndex: 6
-  Angle1: 0
-  Rot1: {x: 0.25, y: -0.56, z: -0.06}
-  Angle2: 0
-  Rot2: {x: 0.17, y: 0, z: 0.04}
   Position: {x: 4.5, y: 3.54, z: 4.74}
-  Phi: 0
+  Rot1: {x: 0.25, y: -0.56, z: -0.06}
+  Rot2: {x: 0.17, y: 0, z: 0.04}
   Scale: 1.94
   Offset: {x: 4.9, y: 3.62, z: 3.07}
+  Offset2: 0
   Iterations: 15
   Scale2: 1
 --- !u!1 &705507993
@@ -1111,6 +1109,7 @@ GameObject:
   - component: {fileID: 1570358200}
   - component: {fileID: 1570358199}
   - component: {fileID: 1570358195}
+  - component: {fileID: 1570358201}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -1278,6 +1277,19 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
+--- !u!114 &1570358201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570358191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4def11a1ce9e243897bdd19035b71e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionReference: {fileID: 388832453205063116, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!1 &1770613299
 GameObject:
   m_ObjectHideFlags: 0
