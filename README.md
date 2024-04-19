@@ -1,6 +1,9 @@
 VRFractal is a VR visualisation made in Unity engine.
 It features several generated fractals that can be explored using VR headset.
 
+Download:
+https://drive.google.com/file/d/12z-jumw99IKptJdwAfRmNiFJY-Y8y9ZE/view?usp=sharing
+
 This project was made for my engineering thesis.
 
 To be added (maybe):
