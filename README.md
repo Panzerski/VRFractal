@@ -6,6 +6,8 @@ https://drive.google.com/file/d/12z-jumw99IKptJdwAfRmNiFJY-Y8y9ZE/view?usp=shari
 
 This project was made for my engineering thesis.
 
+![Alt text](https://i.postimg.cc/SNzqnSXG/gabka.png "Gabka")
+
 To be added (maybe):
 - Fractal are customizable but only through inspector window for now.
 - Optimalization (maybe adding LOD or an equivalent)
